@@ -69,10 +69,17 @@ public:
 	static const byte CMD_SET_BAUD = 0x94;
 	static const byte CMD_SLEEP = 0x96;
 
+	//I2C
 	boolean debug; //!< debug mode, prints all I2C communication to Serial port
 	byte address; //!< I2C address (default 0x42)
 	byte pinRESET; //!< RESET pin (default 3)
 	byte pinDREADY; //!< DREADY pin (default 4)
+	//SPI
+	int baud; //!< baud rate (default 19200bps)
+	byte pinRX; //!< RX pin (default 7)
+	byte pinTX; //!< TX pin (default 8)
+	byte pinXBeeRX; //!< RX pin for XBee (default 10)
+	byte pinXBeeTX; //!< TX pin for XBee (default 9)
 
 	//! Constructor
 	SM130();
