@@ -20,6 +20,7 @@
  */
 
 #include <Wire.h>
+#include <SoftwareSerial.h>
 #include <string.h>
 
 #include "SM130.h"
@@ -37,11 +38,17 @@ char toHex(byte b);
  */
 SM130::SM130()
 {
+	//I2C
 	address = 0x42;
 	pinRESET = 3;
 	pinDREADY = 4;
 	debug = false;
 	t = millis() + 10;
+	// SPI
+	pinRX = 7;
+	pinTX = 8;
+	pinXBeeRX = 10;
+	pinXBeeTX = 9;
 }
 
 /* Public member functions ****************************************************/
@@ -62,25 +69,9 @@ SM130::SM130()
  */
 void SM130::reset()
 {
-	// Init DREADY pin
-	if (pinDREADY != 0xff)
-	{
-		pinMode(pinDREADY, INPUT);
-	}
-
-	// Init RESET pin
-	if (pinRESET != 0xff) // hardware reset
-	{
-		pinMode(pinRESET, OUTPUT);
-		digitalWrite(pinRESET, HIGH);
-		delay(10);
-		digitalWrite(pinRESET, LOW);
-	}
-	else // software reset
-	{
-		sendCommand(CMD_RESET);
-	}
-
+	// Software reset since physical reset is tied to S1
+	sendCommand(CMD_RESET);
+	
 	// Allow enough time for reset
 	delay(200);
 
@@ -365,7 +356,7 @@ void SM130::transmitData()
 	cmd = data[1];
 
 	// transmit packet with checksum
-	Wire.beginTransmission(address);
+	//Wire.beginTransmission(address);
 	for (int i = 0; i < len; i++)
 	{
 #if defined(ARDUINO) && ARDUINO >= 100
